@@ -1,0 +1,40 @@
+volumes:
+  db_data:
+
+services:
+  subscriptions:
+    container_name: avito_intern
+    build: .
+    restart: unless-stopped
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    environment:
+      DB_HOST: "${DB_HOST}"
+      DB_PORT: "${DB_PORT}"
+      DB_USER: "${DB_USER}"
+      DB_PASSWORD: "${DB_PASSWORD}"
+      DB_NAME: "${DB_NAME}"
+      DB_SSLMODE: "${DB_SSLMODE}"
+      SERVER_PORT: "${SERVER_PORT}"
+      LOG_LEVEL: "${LOG_LEVEL}"
+    depends_on:
+      db:
+        condition: service_healthy
+        
+  db:
+    container_name: postgres_for_avito
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: "${DB_USER}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_DB: "${DB_NAME}"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 60s
+      timeout: 30s
+      retries: 3
+      start_period: 60s
+

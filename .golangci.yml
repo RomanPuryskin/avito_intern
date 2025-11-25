@@ -1,0 +1,33 @@
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+  gocritic:
+    enabled-tags:
+      - performance
+      - style
+
+run:
+  go: "1.24.0"
+  timeout: 1m
+  issues:
+    exclude-dirs:
+      - vendor
+      - generated 
+
+linters:
+  disable-all: true
+  enable:
+    - bodyclose
+    - cyclop
+    - depguard
+    - dogsled
+    - dupl
+    - errname
+    - gci 
+    - gomodguard     
+    - rowserrcheck
+    - sloglint
+    - unconvert
+    - unparam
+    - varnamelen
+    - whitespace
